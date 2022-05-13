@@ -13,7 +13,7 @@ export const removeFromRecipe = event => {
 }
 
 export const renderRecipesMenu = () => {
-    let recipes = $('<div>').addClass('recipes').appendTo(action)
+    const recipes = $('<div>').addClass('recipes').appendTo(action)
     const header = $('<div>').addClass('recipes__header').appendTo(recipes)
     const recipesName = $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
     const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)

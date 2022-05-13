@@ -1,8 +1,8 @@
 import {renderProduct, addAllProducts} from './products_utils.js'
-import {renderRecipesMenu} from './przepisy_utils.js'
+import {renderRecipesMenu} from './recipes_utils.js'
 
 export const action = $('.action')
-let activeButton = 'skladniki'
+let activeButton = 'products'
 
 const renderMenu = () => {
     const mishmashTitle = $('<div>').appendTo(action).addClass('title').text('Mishmash')
@@ -17,7 +17,7 @@ const renderMenu = () => {
 renderMenu()
 
 $('.navigation__buttons:eq(1)').click(() => {
-    activeButton = 'przepisy'
+    activeButton = 'recipes'
     $('.products').remove()
     renderRecipesMenu()
     addAllProducts(product => {
@@ -26,12 +26,10 @@ $('.navigation__buttons:eq(1)').click(() => {
 })
 
 $('.navigation__add').click( () => {
-    if (activeButton === 'skladniki') {
+    if (activeButton === 'products') {
         renderProduct()
-        console.log('skladniki')
     }
 
-    if (activeButton === 'przepisy') {
-        console.log('przepisy')
+    if (activeButton === 'recipes') {
     }
 })
