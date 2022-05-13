@@ -1,6 +1,6 @@
+import {renderProduct, addAllProducts} from './products_utils.js'
+
 const action = $('.action')
-export let productsSpecial = new Set()
-let products = []
 
 const renderMenu = () => {
     const mishmashTitle = $('<div>').appendTo(action).addClass('title').text('Mishmash')
@@ -12,68 +12,7 @@ const renderMenu = () => {
     const addButton = $('<button>').appendTo(action).addClass('navigation__add').text('+')
 }
 
-export const deleteProduct = event => {
-    $(event.target).parents('.selected-product').remove()
-    productsSpecial.delete($(event.target).siblings('.selected-product__text').val())
-
-    return productsSpecial
-}
-
-export const editProduct = event => {
-    $(event.target).siblings('.selected-product__text').css('text-align', 'left').attr('readOnly', false)
-    productsSpecial.delete($(event.target).siblings('.selected-product__text').val())
-
-    return productsSpecial
-}
-
 renderMenu()
-
-export const addProductText = event => {
-    productsSpecial.add($(event.target).val())
-    products = productsSpecial
-    $('.products').children().remove()
-
-    products.forEach(object => {
-        renderProduct(object)
-
-        $('.selected-product__icon-trash').click(event => {
-            deleteProduct(event)
-        })
-
-        $('.selected-product__icon-edit').click(event => {
-            editProduct(event)
-        })
-
-        $('.selected-product__text').on('change', event =>{
-            productsSpecial.add($(event.target).val())
-            products = productsSpecial
-        })
-    })
-
-    return products
-}
-
-export const renderProduct = text => {
-    const productBox = $('<div>').appendTo($('.products')).addClass('selected-product')
-    const productText = $('<input>').appendTo(productBox).addClass('selected-product__text').attr('placeholder', 'wpisz nazwe produktu').val(text)
-    const trashIcon = $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
-    const editIcon = $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
-
-    $('.selected-product__text').on('change', () =>{
-        addProductText(event)
-        $('.selected-product__text').attr('readOnly', true).css('text-align', 'center')
-    })
-
-    $('.selected-product__icon-trash').click(event => {
-        deleteProduct(event)
-    })
-
-    $('.selected-product__icon-edit').click(event => {
-        editProduct(event)
-    })
-
-    return productBox
-}
 
 const addNewProduct = () => {
     $('.navigation__add').on('click', () => {
@@ -82,3 +21,60 @@ const addNewProduct = () => {
 }
 
 addNewProduct()
+
+
+export const addToRecipe = event => {
+    $(event.target).removeClass()
+    $(event.target).addClass('recipes__products--select')
+}
+
+export const removeFromRecipe = event => {
+    $(event.target).removeClass()
+    $(event.target).addClass('recipes__products--div')
+}
+
+const secondButton = () => {
+    const renderRecipesMenu = () => {
+        const recipes = $('<div>').addClass('recipes').appendTo(action)
+        const header = $('<div>').addClass('recipes__header').appendTo(recipes)
+        const recipesName = $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
+        const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)
+        const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
+
+        let products = localStorage.getItem('products')
+        let productsName = []
+
+        productsName = productsName.concat(products)
+        productsName.toString().split(',')
+
+        const splitProductsName = productsName.toString().split(',')
+
+        splitProductsName.forEach(productName => {
+            $('<div>').addClass('recipes__products--div').appendTo(recipesProducts).text(productName)
+
+            $('.recipes__products--div').click(event => {
+                addToRecipe(event)
+
+                $('.recipes__products--select').click(event => {
+                    removeFromRecipe(event)
+                })
+            })
+        })
+
+        return recipes
+    }
+
+    $('.navigation__buttons:eq(1)').click(() => {
+        $('.products').remove()
+        addAllProducts(product => {
+            localStorage.setItem('products', product)
+        })
+
+        renderRecipesMenu()
+    })
+
+
+}
+
+secondButton()
+
