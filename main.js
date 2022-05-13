@@ -1,6 +1,8 @@
 import {renderProduct, addAllProducts} from './products_utils.js'
+import {renderRecipesMenu} from './przepisy_utils.js'
 
-const action = $('.action')
+export const action = $('.action')
+let activeButton = 'skladniki'
 
 const renderMenu = () => {
     const mishmashTitle = $('<div>').appendTo(action).addClass('title').text('Mishmash')
@@ -14,67 +16,22 @@ const renderMenu = () => {
 
 renderMenu()
 
-const addNewProduct = () => {
-    $('.navigation__add').on('click', () => {
-        renderProduct()
+$('.navigation__buttons:eq(1)').click(() => {
+    activeButton = 'przepisy'
+    $('.products').remove()
+    renderRecipesMenu()
+    addAllProducts(product => {
+        localStorage.setItem('products', product)
     })
-}
+})
 
-addNewProduct()
-
-
-export const addToRecipe = event => {
-    $(event.target).removeClass()
-    $(event.target).addClass('recipes__products--select')
-}
-
-export const removeFromRecipe = event => {
-    $(event.target).removeClass()
-    $(event.target).addClass('recipes__products--div')
-}
-
-const secondButton = () => {
-    const renderRecipesMenu = () => {
-        const recipes = $('<div>').addClass('recipes').appendTo(action)
-        const header = $('<div>').addClass('recipes__header').appendTo(recipes)
-        const recipesName = $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
-        const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)
-        const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
-
-        let products = localStorage.getItem('products')
-        let productsName = []
-
-        productsName = productsName.concat(products)
-        productsName.toString().split(',')
-
-        const splitProductsName = productsName.toString().split(',')
-
-        splitProductsName.forEach(productName => {
-            $('<div>').addClass('recipes__products--div').appendTo(recipesProducts).text(productName)
-
-            $('.recipes__products--div').click(event => {
-                addToRecipe(event)
-
-                $('.recipes__products--select').click(event => {
-                    removeFromRecipe(event)
-                })
-            })
-        })
-
-        return recipes
+$('.navigation__add').click( () => {
+    if (activeButton === 'skladniki') {
+        renderProduct()
+        console.log('skladniki')
     }
 
-    $('.navigation__buttons:eq(1)').click(() => {
-        $('.products').remove()
-        addAllProducts(product => {
-            localStorage.setItem('products', product)
-        })
-
-        renderRecipesMenu()
-    })
-
-
-}
-
-secondButton()
-
+    if (activeButton === 'przepisy') {
+        console.log('przepisy')
+    }
+})

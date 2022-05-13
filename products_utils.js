@@ -19,7 +19,7 @@ const editProduct = event => {
     return productsSpecial
 }
 
-const addProductText = event => {
+export const addProductText = event => {
     productsSpecial.add($(event.target).val())
     products = [...productsSpecial]
 
