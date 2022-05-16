@@ -4,27 +4,25 @@ body {
 
 .action {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: cadetblue;
   justify-content: center;
-  gap: 10%;
+  gap: 20px;
 }
 
 .title {
   display: flex;
-  position: absolute;
   width: 200px;
   font-size: 40px;
-  top: 10px;
   font-weight: bold;
 }
 
 .navigation {
   width: 70%;
-  height: 10%;
+  min-height: 100px;
   background-color: cyan;
   display: flex;
   flex-direction: row;
@@ -56,13 +54,14 @@ body {
 
 .products {
   width: 70%;
-  height: 60%;
+  min-height: 450px;
   background-color: cyan;
   display: flex;
   border-radius: 50px;
   gap: 10px;
   align-content: flex-start;
   flex-wrap: wrap;
+  padding: 20px;
 }
 .products__ingredient {
   width: 100px;
@@ -118,7 +117,7 @@ button:disabled {
 
 .recipes {
   width: 70%;
-  height: 60%;
+  min-height: 450px;
   background-color: cyan;
   display: flex;
   border-radius: 50px;
@@ -184,6 +183,49 @@ button:disabled {
   align-items: center;
   justify-content: center;
   margin-top: 10px;
+}
+
+.recipe-Box {
+  width: 100%;
+  min-height: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.ready-recipe {
+  width: 100px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background: darkgray;
+  border-style: solid;
+  padding: 10px;
+  margin: 15px;
+}
+.ready-recipe__name {
+  width: 100px;
+  height: 20px;
+  display: flex;
+}
+.ready-recipe__title {
+  width: 100px;
+  height: 20px;
+  display: flex;
+}
+.ready-recipe__product {
+  width: 100px;
+  display: flex;
+}
+.ready-recipe__trash {
+  display: flex;
+  width: 15px;
+  height: 25px;
+  background-image: url("trash-solid.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border-radius: 20px;
 }
 
 /*# sourceMappingURL=style.css.map */

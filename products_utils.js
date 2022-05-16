@@ -1,11 +1,12 @@
 let productsSpecial = new Set()
 let products = []
+let renderedArrayProducts = []
 
 const deleteProduct = event => {
     $(event.target).parents('.selected-product').remove()
     productsSpecial.delete($(event.target).siblings('.selected-product__text').val())
 
-    if (productsSpecial.size ===0){
+    if (productsSpecial.size === 0) {
         $('.navigation__buttons:eq(1)').attr('disabled', true)
     }
 
@@ -19,6 +20,23 @@ const editProduct = event => {
     return productsSpecial
 }
 
+const addLocalStorageToProducts = () => {
+    let saveArrayOfProducts = []
+
+    saveArrayOfProducts = saveArrayOfProducts.concat(localStorage.getItem('products'))
+    saveArrayOfProducts = saveArrayOfProducts.toString().split(',')
+    renderedArrayProducts = saveArrayOfProducts.map(product => {
+        product = product.replaceAll('[', '').replaceAll('"', '').replaceAll(']', '')
+        productsSpecial.add(product)
+
+        return product
+    })
+
+    return renderedArrayProducts
+}
+
+addLocalStorageToProducts()
+
 export const addProductText = event => {
     productsSpecial.add($(event.target).val())
     products = [...productsSpecial]
@@ -29,7 +47,7 @@ export const addProductText = event => {
         $('.navigation__buttons:eq(1)').attr('disabled', false)
     }
 
-    products.forEach((object,index) => {
+    products.forEach((object, index) => {
         renderProduct(object)
 
         $('.selected-product__icon-trash').click(event => {
@@ -55,7 +73,7 @@ export const renderProduct = text => {
     const trashIcon = $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
     const editIcon = $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
 
-    $('.selected-product__text').on('change', () => {
+    $('.selected-product__text').on('change', event => {
         addProductText(event)
         $('.selected-product__text').attr('readOnly', true).css('text-align', 'center')
     })
@@ -72,5 +90,7 @@ export const renderProduct = text => {
 }
 
 export const addAllProducts = addProduct => {
-    addProduct(products)
+    if (products.length !== 0) {
+        addProduct(products)
+    }
 }
