@@ -31,11 +31,7 @@ export const renderMishMashChoice = () => {
 
     recipes = getFromLocalStorage('recipes')
     productsName = productsName.concat(products)
-    productsName.toString().split(',')
-
-    let splitProductsName = productsName
-
-    splitProductsName.forEach(product => {
+    productsName.forEach(product => {
         const newProduct = $('<div>').addClass('recipes__products--div').appendTo(mishMashProducts).text(product)
 
         newProduct.click(event => {
