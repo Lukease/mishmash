@@ -1,3 +1,5 @@
+import { getFromLocalStorage, setToLocalStorage } from './local_storage_utils.js'
+
 let productsSpecial = new Set()
 let products = []
 let renderedArrayProducts = []
@@ -6,8 +8,13 @@ const deleteProduct = event => {
     $(event.target).parents('.selected-product').remove()
     productsSpecial.delete($(event.target).siblings('.selected-product__text').val())
 
+    const newArrayProduct = [...productsSpecial]
+
+    setToLocalStorage('products', newArrayProduct)
+
     if (productsSpecial.size === 0) {
         $('.navigation__buttons:eq(1)').attr('disabled', true)
+        $('.navigation__buttons:eq(2)').attr('disabled', true)
     }
 
     return productsSpecial
@@ -17,20 +24,18 @@ const editProduct = event => {
     $(event.target).siblings('.selected-product__text').css('text-align', 'left').attr('readOnly', false)
     productsSpecial.delete($(event.target).siblings('.selected-product__text').val())
 
+    const newArrayProduct = [...productsSpecial]
+
+    setToLocalStorage('products', newArrayProduct)
+
     return productsSpecial
 }
 
 const addLocalStorageToProducts = () => {
-    let saveArrayOfProducts = []
+    const products = getFromLocalStorage('products')
+        .map(product => product.replaceAll('[', '').replaceAll('"', '').replaceAll(']', ''))
 
-    saveArrayOfProducts = saveArrayOfProducts.concat(localStorage.getItem('products'))
-    saveArrayOfProducts = saveArrayOfProducts.toString().split(',')
-    renderedArrayProducts = saveArrayOfProducts.map(product => {
-        product = product.replaceAll('[', '').replaceAll('"', '').replaceAll(']', '')
-        productsSpecial.add(product)
-
-        return product
-    })
+    products.forEach(product => productsSpecial.add(product))
 
     return renderedArrayProducts
 }
@@ -45,6 +50,7 @@ export const addProductText = event => {
 
     if (productsSpecial.size !== 0) {
         $('.navigation__buttons:eq(1)').attr('disabled', false)
+        $('.navigation__buttons:eq(2)').attr('disabled', false)
     }
 
     products.forEach((object, index) => {
