@@ -13,7 +13,6 @@ const renderSaveProducts = () => {
     const renderedArrayProducts = saveArrayOfProducts.toString().split(',')
 
     renderedArrayProducts.forEach(object => {
-        object = object.replaceAll('[', '').replaceAll('"', '').replaceAll(']', '')
         renderProduct(object)
         $('.selected-product__text').attr('readOnly', true).css('text-align', 'center')
     })

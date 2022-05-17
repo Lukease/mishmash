@@ -9,9 +9,9 @@ const renderCorrectRecipes = (name, data) => {
     const recipesBox = $('.recipe-Box')
     const correctRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
 
-    $('<div>').addClass('ready-recipe__title').appendTo(correctRecipe).text(`name: `).css('font-weight', 'bold')
+    $('<div>').addClass('ready-recipe__title').appendTo(correctRecipe).text(`Name: `).css('font-weight', 'bold').css('justify-content', 'center')
     $('<div>').addClass('ready-recipe__name').appendTo(correctRecipe).text(name)
-    $('<div>').addClass('ready-recipe__product').appendTo(correctRecipe).text('products: ').css('font-weight', 'bold')
+    $('<div>').addClass('ready-recipe__product').appendTo(correctRecipe).text('Products: ').css('font-weight', 'bold').css('justify-content', 'center')
     data.forEach(product => {
         $('<div>').addClass('ready-recipe__product').appendTo(correctRecipe).text(product)
     })
@@ -33,15 +33,14 @@ export const renderMishMashChoice = () => {
     productsName = productsName.concat(products)
     productsName.toString().split(',')
 
-
-    let splitProductsName = productsName.toString().split(',')
+    let splitProductsName = productsName
 
     splitProductsName.forEach(product => {
-        product = product.replaceAll('[', '').replaceAll('"', '').replaceAll(']', '')
         const newProduct = $('<div>').addClass('recipes__products--div').appendTo(mishMashProducts).text(product)
 
         newProduct.click(event => {
             $('.recipe-Box').children('.ready-recipe').remove()
+
             if (!$(event.target).hasClass('recipes__products--div')) {
                 removeFromRecipe(event)
                 findCorrectRecipe()

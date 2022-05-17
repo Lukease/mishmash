@@ -33,7 +33,6 @@ const editProduct = event => {
 
 const addLocalStorageToProducts = () => {
     const products = getFromLocalStorage('products')
-        .map(product => product.replaceAll('[', '').replaceAll('"', '').replaceAll(']', ''))
 
     products.forEach(product => productsSpecial.add(product))
 

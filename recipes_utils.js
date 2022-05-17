@@ -91,9 +91,9 @@ const renderRecipes = (name, array) => {
     const readyRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
     const trashIcon = $('<button>').appendTo(readyRecipe).addClass('ready-recipe__trash')
 
-    $('<div>').addClass('ready-recipe__title').appendTo(readyRecipe).text(`name: `).css('font-weight', 'bold')
+    $('<div>').addClass('ready-recipe__title').appendTo(readyRecipe).text(`Name: `).css('font-weight', 'bold').css('justify-content', 'center')
     $('<div>').addClass('ready-recipe__name').appendTo(readyRecipe).text(name)
-    $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text('products: ').css('font-weight', 'bold')
+    $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text('Products: ').css('font-weight', 'bold').css('justify-content', 'center')
     array.forEach(product => {
         $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text(product)
     })
