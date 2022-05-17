@@ -1,0 +1,231 @@
+body {
+  margin: 0;
+}
+
+.action {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: cadetblue;
+  justify-content: center;
+  gap: 20px;
+}
+
+.title {
+  display: flex;
+  width: 200px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.navigation {
+  width: 70%;
+  min-height: 100px;
+  background-color: cyan;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  border-radius: 50px;
+}
+.navigation__buttons {
+  width: 200px;
+  height: 50px;
+  display: flex;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+}
+.navigation__add {
+  display: flex;
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  border-radius: 70px;
+  font-size: 150px;
+  justify-content: center;
+  align-items: center;
+  right: 0;
+  bottom: 0;
+}
+
+.products {
+  width: 70%;
+  min-height: 450px;
+  background-color: cyan;
+  display: flex;
+  border-radius: 50px;
+  gap: 10px;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+.products__ingredient {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  border-style: solid;
+  border-radius: 50px;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+}
+
+button:disabled {
+  background: #dddddd;
+}
+
+.selected-product {
+  display: flex;
+  width: 290px;
+  height: 30px;
+  justify-content: center;
+  margin-left: 20px;
+  background-color: blue;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+.selected-product__text {
+  display: flex;
+  width: 250px;
+  height: 24px;
+  border-radius: 20px;
+}
+.selected-product__icon-trash {
+  display: flex;
+  width: 20px;
+  height: 30px;
+  background-image: url("trash-solid.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border-radius: 20px;
+}
+.selected-product__icon-edit {
+  display: flex;
+  width: 20px;
+  height: 30px;
+  background-image: url("pen-solid.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border-radius: 20px;
+}
+
+.recipes {
+  width: 70%;
+  min-height: 450px;
+  background-color: cyan;
+  display: flex;
+  border-radius: 50px;
+  flex-direction: column;
+}
+.recipes__header {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  background-color: darkgray;
+  align-items: center;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+}
+.recipes__header--text {
+  display: flex;
+  width: 250px;
+  height: 24px;
+  border-radius: 20px;
+  text-align: center;
+}
+.recipes__header--button {
+  width: 35px;
+  height: 35px;
+  margin-left: 10px;
+  padding: 3px;
+  font-weight: bold;
+}
+.recipes__products {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  align-items: flex-start;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-content: flex-start;
+}
+.recipes__products--div {
+  width: auto;
+  height: 60px;
+  font-size: 30px;
+  border-radius: 20px;
+  display: flex;
+  background-color: darkgray;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.recipes__products--select {
+  width: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 60px;
+  font-size: 30px;
+  border-radius: 20px;
+  display: flex;
+  background-color: chartreuse;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.recipe-Box {
+  width: 100%;
+  min-height: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.ready-recipe {
+  width: 100px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  background: darkgray;
+  border-style: solid;
+  padding: 10px;
+  margin: 15px;
+}
+.ready-recipe__name {
+  width: 100px;
+  height: 20px;
+  display: flex;
+}
+.ready-recipe__title {
+  width: 100px;
+  height: 20px;
+  display: flex;
+}
+.ready-recipe__product {
+  width: 100px;
+  display: flex;
+}
+.ready-recipe__trash {
+  display: flex;
+  width: 15px;
+  height: 25px;
+  background-image: url("trash-solid.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  border-radius: 20px;
+}
+
+/*# sourceMappingURL=style.css.map */
