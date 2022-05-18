@@ -1,4 +1,3 @@
-import { action } from './main.js'
 import { addToRecipe, removeFromRecipe } from './recipes_utils.js'
 import { getFromLocalStorage } from './local_storage_utils.js'
 
@@ -20,14 +19,14 @@ const renderCorrectRecipes = (name, data) => {
 }
 
 export const renderMishMashChoice = () => {
-    const mishMash = $('<div>').addClass('mish-mash').appendTo(action)
+    const mishMash = $('<div>').addClass('mish-mash').appendTo($('.action'))
     const mishMashProducts = $('<div>').addClass('mish-mash__product').appendTo(mishMash)
     const mishMashBox = $('<div>').addClass('mish-mash__matching-recipe').appendTo('.recipes')
     const title = $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
     const recipesBox = $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
 
     const products = getFromLocalStorage('products')
-    console.log(products)
+
     let productsName = []
 
     recipes = getFromLocalStorage('recipes')

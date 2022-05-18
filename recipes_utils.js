@@ -1,4 +1,3 @@
-import { action } from './main.js'
 import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
 
 let recipesArray = []
@@ -30,7 +29,7 @@ export const removeFromRecipe = event => {
 }
 
 export const renderRecipesMenu = () => {
-    const recipes = $('<div>').addClass('recipes').appendTo(action)
+    const recipes = $('<div>').addClass('recipes').appendTo($('.action'))
     const header = $('<div>').addClass('recipes__header').appendTo(recipes).toggle('display')
     const recipesName = $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
     const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)

@@ -33,7 +33,7 @@ const editProduct = event => {
 const addLocalStorageToProducts = () => {
     const products = getFromLocalStorage('products')
 
-    products.forEach(product => productsSpecial.add(product))
+    products?.forEach(product => productsSpecial.add(product))
 }
 
 addLocalStorageToProducts()

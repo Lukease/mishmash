@@ -1,5 +1,5 @@
-import { renderMenu} from './main.js'
-import { renderProduct} from './products_utils.js'
+import { renderMenu, clickButtons } from './main.js'
+import { renderProduct } from './products_utils.js'
 import $ from 'jquery'
 
 const body = `<div class="action"></div>`
@@ -9,6 +9,7 @@ describe('todo app', () => {
     beforeEach(() => {
         $('body').append(body)
         renderMenu()
+        clickButtons()
     })
 
     afterEach(() => {
@@ -73,6 +74,9 @@ describe('todo app', () => {
             expect(productTextEdit).toBe('jajko')
             expect(buttonMishmashDisabled).toBe('disabled')
             expect(buttonRecipesDisabled).toBe('disabled')
+
+            expect(productLenghtBefore).toBeLessThan(productLenghtAfter)
+            expect(productLenghtBeforeDelete).toBeGreaterThan(productLenghtAfterDelete)
         })
     })
 })
