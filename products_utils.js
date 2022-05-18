@@ -30,13 +30,13 @@ const editProduct = event => {
     return productsSpecial
 }
 
-// const addLocalStorageToProducts = () => {
-//     const products = getFromLocalStorage('products')
-//
-//     products.forEach(product => productsSpecial.add(product))
-// }
-//
-// addLocalStorageToProducts()
+const addLocalStorageToProducts = () => {
+    const products = getFromLocalStorage('products')
+
+    products.forEach(product => productsSpecial.add(product))
+}
+
+addLocalStorageToProducts()
 
 export const addProductText = event => {
     productsSpecial.add($(event.target).val())

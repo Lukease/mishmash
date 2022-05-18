@@ -82,14 +82,3 @@ $('.navigation__buttons:eq(2)').click(() => {
     }
 })
 
-// $('.navigation__add').click(() => {
-//     if (activeButton === 'products') {
-//         renderProduct()
-//     }
-//
-//     if (activeButton === 'recipes') {
-//         $('.recipes__header--text').val('')
-//         $('.recipes__header').toggle('display')
-//     }
-// })
-
