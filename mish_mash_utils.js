@@ -27,6 +27,7 @@ export const renderMishMashChoice = () => {
     const recipesBox = $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
 
     const products = getFromLocalStorage('products')
+    console.log(products)
     let productsName = []
 
     recipes = getFromLocalStorage('recipes')
