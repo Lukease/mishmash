@@ -2,7 +2,6 @@ import { getFromLocalStorage, setToLocalStorage } from './local_storage_utils.js
 
 let productsSpecial = new Set()
 let products = []
-let renderedArrayProducts = []
 
 const deleteProduct = event => {
     $(event.target).parents('.selected-product').remove()
@@ -34,9 +33,7 @@ const editProduct = event => {
 const addLocalStorageToProducts = () => {
     const products = getFromLocalStorage('products')
 
-    products.forEach(product => productsSpecial.add(product))
-
-    return renderedArrayProducts
+    products?.forEach(product => productsSpecial.add(product))
 }
 
 addLocalStorageToProducts()
@@ -44,6 +41,7 @@ addLocalStorageToProducts()
 export const addProductText = event => {
     productsSpecial.add($(event.target).val())
     products = [...productsSpecial]
+    setToLocalStorage('products', products)
 
     $('.products').children().remove()
 
@@ -66,6 +64,7 @@ export const addProductText = event => {
         $('.selected-product__text').on('change', event => {
             productsSpecial.add($(event.target).val())
             products = productsSpecial
+            setToLocalStorage('products', products)
         })
     })
 
@@ -92,10 +91,4 @@ export const renderProduct = text => {
     })
 
     return productBox
-}
-
-export const addAllProducts = addProduct => {
-    if (products.length !== 0) {
-        addProduct(products)
-    }
 }
