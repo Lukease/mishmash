@@ -2,10 +2,10 @@ import { addToRecipe, removeFromRecipe } from './recipes_utils'
 import { getFromLocalStorage } from './local_storage_utils'
 import type { Recipe } from './types'
 
-let selectedProducts:Array<string> = []
-let recipes:Array<Recipe> = []
+let selectedProducts: Array<string> = []
+let recipes: Array<Recipe> = []
 
-const renderCorrectRecipes = (name:string, data:Array<string>) => {
+const renderCorrectRecipes = (name: string, data: Array<string>) => {
     const recipesBox = $('.recipe-Box')
     const correctRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
 
@@ -28,7 +28,7 @@ export const renderMishMashChoice = () => {
 
     const products = getFromLocalStorage('products')
 
-    let productsName:Array<string> = []
+    let productsName: Array<string> = []
 
     recipes = getFromLocalStorage('recipes')
     productsName = productsName.concat(products)
@@ -53,7 +53,7 @@ export const renderMishMashChoice = () => {
 const findCorrectRecipe = () => {
     selectedProducts = $('.recipes__products--select').toArray().map(object => object.innerHTML)
     recipes.forEach(recipes => {
-        const correctProducts = recipes.products.every((product:string) => selectedProducts.includes(product))
+        const correctProducts = recipes.products.every((product) => selectedProducts.includes(product))
 
         if (correctProducts === true) {
             renderCorrectRecipes(recipes.name, recipes.products)

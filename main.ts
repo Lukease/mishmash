@@ -4,7 +4,7 @@ import { renderMishMashChoice } from './mish_mash_utils'
 import { getFromLocalStorage } from './local_storage_utils'
 
 let activeButton = 'products'
-let saveArrayOfProducts:Array<string> = []
+let saveArrayOfProducts: Array<string> = []
 
 const renderSaveProducts = () => {
     saveArrayOfProducts = saveArrayOfProducts.concat(getFromLocalStorage('products'))
@@ -21,12 +21,17 @@ const renderSaveProducts = () => {
 
 export const renderMenu = () => {
     const action = $('.action')
+
     $('<div>').appendTo(action).addClass('title').text('Mishmash')
+
     const buttonsBox = $('<div>').appendTo(action).addClass('navigation')
     const productsBox = $('<div>').appendTo(action).addClass('products')
+
     $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Składniki')
-    let secondButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Przepisy').attr('disabled', 'true')
-    let thirdButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Mishmash').attr('disabled', 'true')
+
+    const secondButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Przepisy').attr('disabled', 'true')
+    const thirdButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Mishmash').attr('disabled', 'true')
+
     $('<button>').appendTo(action).addClass('navigation__add').text('+')
 
     if (productsBox.has('selected-product')) {

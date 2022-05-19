@@ -1,16 +1,15 @@
 import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
 import type { Recipe } from './types'
-import ClickEvent = JQuery.ClickEvent
 
-let saveArrayOfRecipes:Array<Recipe> = []
-let allRecipe:Array<Recipe> = []
+let saveArrayOfRecipes: Array<Recipe> = []
+let allRecipe: Array<Recipe> = []
 
 export const renderSaveRecipes = () => {
     const recipes = getFromLocalStorage('recipes')
 
     saveArrayOfRecipes = saveArrayOfRecipes.concat(recipes)
 
-    const renderedArrayProducts:Array<Recipe> =  saveArrayOfRecipes
+    const renderedArrayProducts: Array<Recipe> =  saveArrayOfRecipes
 
     renderedArrayProducts.forEach(object => {
         renderRecipes(object.name, object.products)
@@ -19,14 +18,14 @@ export const renderSaveRecipes = () => {
     saveArrayOfRecipes = []
 }
 
-export const addToRecipe = (event:ClickEvent) => {
+export const addToRecipe = (event: JQuery.ClickEvent) => {
     const selectedProduct = $(event.target)
 
     selectedProduct.removeClass()
     selectedProduct.addClass('recipes__products--select')
 }
 
-export const removeFromRecipe = (event:ClickEvent) => {
+export const removeFromRecipe = (event: JQuery.ClickEvent) => {
     const selectedProduct = $(event.target)
 
     selectedProduct.removeClass()
@@ -42,7 +41,7 @@ export const renderRecipesMenu = () => {
     $('<div>').addClass('recipe-Box').appendTo('.recipes')
 
     const products = getFromLocalStorage('products')
-    let productsName:Array<string> = []
+    let productsName: Array<string> = []
 
     productsName = productsName.concat(products)
     productsName.toString().split(',')
@@ -70,8 +69,8 @@ export const renderRecipesMenu = () => {
 
         if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
             const arrayOfProducts = $('.recipes__products--select').toArray()
-            const array:Array<string> = arrayOfProducts.map(object => object.innerHTML)
-            const recipe:Recipe = {
+            const array: Array<string> = arrayOfProducts.map(object => object.innerHTML)
+            const recipe: Recipe = {
                 name: recipesName,
                 products: array
             }
@@ -88,7 +87,7 @@ export const renderRecipesMenu = () => {
     return recipes
 }
 
-const renderRecipes = (name:string, array:Array<string>) => {
+const renderRecipes = (name: string, array: Array<string>) => {
     const recipesBox = $('.recipe-Box')
     const readyRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
     const trashIcon = $('<button>').appendTo(readyRecipe).addClass('ready-recipe__trash')

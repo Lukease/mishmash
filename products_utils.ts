@@ -1,11 +1,9 @@
 import { getFromLocalStorage, setToLocalStorage } from './local_storage_utils'
-import ClickEvent = JQuery.ClickEvent
-import ChangeEvent = JQuery.ChangeEvent;
 
-let productsSpecial:Set<string> = new Set()
-let products:Array<string> = []
+let productsSpecial: Set<string> = new Set()
+let products: Array<string> = []
 
-const deleteProduct = (event: ClickEvent) => {
+const deleteProduct = (event: JQuery.ClickEvent) => {
     const selectedProduct = $(event.target)
 
     selectedProduct.parents('.selected-product').remove()
@@ -14,7 +12,7 @@ const deleteProduct = (event: ClickEvent) => {
 
     productsSpecial.delete(deleteProductName)
 
-    const newArrayProduct:Array<string> = [...productsSpecial]
+    const newArrayProduct: Array<string> = [...productsSpecial]
 
     setToLocalStorage('products', newArrayProduct)
 
@@ -26,7 +24,7 @@ const deleteProduct = (event: ClickEvent) => {
     return productsSpecial
 }
 
-const editProduct = (event: ClickEvent) => {
+const editProduct = (event: JQuery.ClickEvent) => {
     const editProduct = $(event.target)
 
     editProduct.siblings('.selected-product__text').css('text-align', 'left').attr('readOnly', 'false')
@@ -43,14 +41,14 @@ const editProduct = (event: ClickEvent) => {
 }
 
 const addLocalStorageToProducts = () => {
-    const products = getFromLocalStorage('products')
+    const products: Array<string> = getFromLocalStorage('products')
 
-    products?.forEach((product:string) => productsSpecial.add(product))
+    products?.forEach(product => productsSpecial.add(product))
 }
 
 addLocalStorageToProducts()
 
-export const addProductText = (event: ChangeEvent) => {
+export const addProductText = (event: JQuery.ChangeEvent) => {
     const selectedProduct = $(event.target)
     const addProductName = String(selectedProduct.val())
 
@@ -91,6 +89,7 @@ export const addProductText = (event: ChangeEvent) => {
 
 export const renderProduct = (text:string) => {
     const productBox = $('<div>').appendTo($('.products')).addClass('selected-product')
+
     $('<input>').appendTo(productBox).addClass('selected-product__text').attr('placeholder', 'wpisz nazwe produktu').val(text)
     $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
     $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
