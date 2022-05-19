@@ -4,19 +4,19 @@ import { renderMishMashChoice } from './mish_mash_utils'
 import { getFromLocalStorage } from './local_storage_utils'
 
 let activeButton = 'products'
-let saveArrayOfProducts: Array<string> = []
+let products: Array<string> = []
 
 const renderSaveProducts = () => {
-    saveArrayOfProducts = saveArrayOfProducts.concat(getFromLocalStorage<Array<string>>('products'))
+    products = products.concat(getFromLocalStorage<Array<string>>('products'))
 
-    const renderedArrayProducts = saveArrayOfProducts.toString().split(',')
+    const renderedArrayProducts = products.toString().split(',')
 
     renderedArrayProducts.forEach(object => {
         renderProduct(object)
         $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
     })
 
-    saveArrayOfProducts = []
+    products = []
 }
 
 export const renderMenu = () => {
