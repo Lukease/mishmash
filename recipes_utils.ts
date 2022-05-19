@@ -2,7 +2,6 @@ import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js
 import type { Recipe } from './types'
 import ClickEvent = JQuery.ClickEvent
 
-let recipesArray:Array<Recipe> = []
 let saveArrayOfRecipes:Array<Recipe> = []
 let allRecipe:Array<Recipe> = []
 
@@ -77,12 +76,10 @@ export const renderRecipesMenu = () => {
                 products: array
             }
 
-            recipesArray = recipesArray.concat(recipe)
-
             $('.recipes__header').toggle()
             renderRecipes(recipe.name, recipe.products)
 
-            allRecipe = allRecipe.concat(recipesArray)
+            allRecipe = allRecipe.concat(recipe)
 
             setToLocalStorage('recipes', allRecipe)
         }
@@ -118,3 +115,4 @@ const renderRecipes = (name:string, array:Array<string>) => {
         setToLocalStorage('recipes', allRecipe)
     })
 }
+
