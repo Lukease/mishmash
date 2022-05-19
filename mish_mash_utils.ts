@@ -1,5 +1,5 @@
 import { addToRecipe, removeFromRecipe } from './recipes_utils'
-import {getFromLocalStorage, getFromLocalStorageRecipe} from './local_storage_utils'
+import { getFromLocalStorage } from './local_storage_utils'
 import type { Recipe } from './types'
 
 let selectedProducts: Array<string> = []
@@ -26,11 +26,11 @@ export const renderMishMashChoice = () => {
     $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
     $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
 
-    const products = getFromLocalStorage('products')
+    const products = getFromLocalStorage<Array<string>>('products')
 
     let productsName: Array<string> = []
 
-    recipes = getFromLocalStorageRecipe('recipes')
+    recipes = getFromLocalStorage<Array<Recipe>>('recipes')
     productsName = productsName.concat(products)
     productsName.forEach(product => {
         const newProduct = $('<div>').addClass('recipes__products--div').appendTo(mishMashProducts).text(product)

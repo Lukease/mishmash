@@ -1,11 +1,11 @@
-import { setToLocalStorage, getFromLocalStorageRecipe, getFromLocalStorage } from './local_storage_utils.js'
+import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
 import type { Recipe } from './types'
 
 let saveArrayOfRecipes: Array<Recipe> = []
 let allRecipe: Array<Recipe> = []
 
 export const renderSaveRecipes = () => {
-    const recipes = getFromLocalStorageRecipe('recipes')
+    const recipes = getFromLocalStorage<Array<Recipe>>('recipes')
 
     saveArrayOfRecipes = saveArrayOfRecipes.concat(recipes)
 
@@ -40,7 +40,7 @@ export const renderRecipesMenu = () => {
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
     $('<div>').addClass('recipe-Box').appendTo('.recipes')
 
-    const products = getFromLocalStorage('products')
+    const products = getFromLocalStorage<Array<string>>('products')
     let productsName: Array<string> = []
 
     productsName = productsName.concat(products)

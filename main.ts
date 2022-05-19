@@ -7,7 +7,7 @@ let activeButton = 'products'
 let saveArrayOfProducts: Array<string> = []
 
 const renderSaveProducts = () => {
-    saveArrayOfProducts = saveArrayOfProducts.concat(getFromLocalStorage('products'))
+    saveArrayOfProducts = saveArrayOfProducts.concat(getFromLocalStorage<Array<string>>('products'))
 
     const renderedArrayProducts = saveArrayOfProducts.toString().split(',')
 

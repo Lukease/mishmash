@@ -41,7 +41,7 @@ const editProduct = (event: JQuery.ClickEvent) => {
 }
 
 const addLocalStorageToProducts = () => {
-    const products = getFromLocalStorage('products')
+    const products = getFromLocalStorage<Array<string>>('products')
 
     products?.forEach(product => productsSpecial.add(product))
 }
