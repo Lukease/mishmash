@@ -1,11 +1,11 @@
-import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
+import { setToLocalStorage, getFromLocalStorageRecipe, getFromLocalStorage } from './local_storage_utils.js'
 import type { Recipe } from './types'
 
 let saveArrayOfRecipes: Array<Recipe> = []
 let allRecipe: Array<Recipe> = []
 
 export const renderSaveRecipes = () => {
-    const recipes = getFromLocalStorage('recipes')
+    const recipes = getFromLocalStorageRecipe('recipes')
 
     saveArrayOfRecipes = saveArrayOfRecipes.concat(recipes)
 
