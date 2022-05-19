@@ -1,10 +1,11 @@
-import { addToRecipe, removeFromRecipe } from './recipes_utils.js'
-import { getFromLocalStorage } from './local_storage_utils.js'
+import { addToRecipe, removeFromRecipe } from './recipes_utils'
+import { getFromLocalStorage } from './local_storage_utils'
+import type { Recipe } from './types'
 
-let selectedProducts = []
-let recipes = []
+let selectedProducts:Array<string> = []
+let recipes:Array<Recipe> = []
 
-const renderCorrectRecipes = (name, data) => {
+const renderCorrectRecipes = (name:string, data:Array<string>) => {
     const recipesBox = $('.recipe-Box')
     const correctRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
 
@@ -21,13 +22,13 @@ const renderCorrectRecipes = (name, data) => {
 export const renderMishMashChoice = () => {
     const mishMash = $('<div>').addClass('mish-mash').appendTo($('.action'))
     const mishMashProducts = $('<div>').addClass('mish-mash__product').appendTo(mishMash)
-    const mishMashBox = $('<div>').addClass('mish-mash__matching-recipe').appendTo('.recipes')
-    const title = $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
-    const recipesBox = $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
+    $('<div>').addClass('mish-mash__matching-recipe').appendTo('.recipes')
+    $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
+    $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
 
     const products = getFromLocalStorage('products')
 
-    let productsName = []
+    let productsName:Array<string> = []
 
     recipes = getFromLocalStorage('recipes')
     productsName = productsName.concat(products)
@@ -52,10 +53,10 @@ export const renderMishMashChoice = () => {
 const findCorrectRecipe = () => {
     selectedProducts = $('.recipes__products--select').toArray().map(object => object.innerHTML)
     recipes.forEach(recipes => {
-        const correctProducts = recipes.recipe.products.every(product => selectedProducts.includes(product))
+        const correctProducts = recipes.products.every((product:string) => selectedProducts.includes(product))
 
         if (correctProducts === true) {
-            renderCorrectRecipes(recipes.recipe.name, recipes.recipe.products)
+            renderCorrectRecipes(recipes.name, recipes.products)
         }
     })
 }

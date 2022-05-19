@@ -1,43 +1,49 @@
 import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
+import type { Recipe } from './types'
+import ClickEvent = JQuery.ClickEvent
 
-let recipesArray = []
-let saveArrayOfRecipes = []
-let allRecipe = []
+let recipesArray:Array<Recipe> = []
+let saveArrayOfRecipes:Array<Recipe> = []
+let allRecipe:Array<Recipe> = []
 
 export const renderSaveRecipes = () => {
     const recipes = getFromLocalStorage('recipes')
 
     saveArrayOfRecipes = saveArrayOfRecipes.concat(recipes)
 
-    const renderedArrayProducts = saveArrayOfRecipes
+    const renderedArrayProducts:Array<Recipe> =  saveArrayOfRecipes
 
     renderedArrayProducts.forEach(object => {
-        renderRecipes(object.recipe.name, object.recipe.products)
+        renderRecipes(object.name, object.products)
     })
     allRecipe = saveArrayOfRecipes
     saveArrayOfRecipes = []
 }
 
-export const addToRecipe = event => {
-    $(event.target).removeClass()
-    $(event.target).addClass('recipes__products--select')
+export const addToRecipe = (event:ClickEvent) => {
+    const selectedProduct = $(event.target)
+
+    selectedProduct.removeClass()
+    selectedProduct.addClass('recipes__products--select')
 }
 
-export const removeFromRecipe = event => {
-    $(event.target).removeClass()
-    $(event.target).addClass('recipes__products--div')
+export const removeFromRecipe = (event:ClickEvent) => {
+    const selectedProduct = $(event.target)
+
+    selectedProduct.removeClass()
+    selectedProduct.addClass('recipes__products--div')
 }
 
 export const renderRecipesMenu = () => {
     const recipes = $('<div>').addClass('recipes').appendTo($('.action'))
-    const header = $('<div>').addClass('recipes__header').appendTo(recipes).toggle('display')
-    const recipesName = $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
+    const header = $('<div>').addClass('recipes__header').appendTo(recipes).toggle()
+    $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
     const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
-    const recipesBox = $('<div>').addClass('recipe-Box').appendTo('.recipes')
+    $('<div>').addClass('recipe-Box').appendTo('.recipes')
 
     const products = getFromLocalStorage('products')
-    let productsName = []
+    let productsName:Array<string> = []
 
     productsName = productsName.concat(products)
     productsName.toString().split(',')
@@ -61,19 +67,19 @@ export const renderRecipesMenu = () => {
     })
 
     button.click(event => {
-        const recipesName = $(event.target).siblings().val()
+        const recipesName = String($(event.target).siblings().val())
 
         if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
             const arrayOfProducts = $('.recipes__products--select').toArray()
-            const array = arrayOfProducts.map(object => object.innerHTML)
-            const recipe = {name: recipesName, products: array}
-
-            recipesArray = {
-                ...recipesArray,
-                recipe
+            const array:Array<string> = arrayOfProducts.map(object => object.innerHTML)
+            const recipe:Recipe = {
+                name: recipesName,
+                products: array
             }
 
-            $('.recipes__header').toggle('display')
+            recipesArray = recipesArray.concat(recipe)
+
+            $('.recipes__header').toggle()
             renderRecipes(recipe.name, recipe.products)
 
             allRecipe = allRecipe.concat(recipesArray)
@@ -85,7 +91,7 @@ export const renderRecipesMenu = () => {
     return recipes
 }
 
-const renderRecipes = (name, array) => {
+const renderRecipes = (name:string, array:Array<string>) => {
     const recipesBox = $('.recipe-Box')
     const readyRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
     const trashIcon = $('<button>').appendTo(readyRecipe).addClass('ready-recipe__trash')
@@ -98,12 +104,14 @@ const renderRecipes = (name, array) => {
     })
 
     trashIcon.click(event => {
-        $(event.target).parents('.ready-recipe').remove()
+        const selectedProduct = $(event.target)
 
-        const name = $(event.target).siblings('.ready-recipe__name').text()
+        selectedProduct.parents('.ready-recipe').remove()
 
-        allRecipe.forEach((object, index) => {
-            if (object.recipe.name === name) {
+        const name = selectedProduct.siblings('.ready-recipe__name').text()
+
+        allRecipe?.forEach((object, index) => {
+            if (object.name === name) {
                 allRecipe = [...allRecipe.slice(0, index), ...allRecipe.slice(index + 1)]
             }
         })

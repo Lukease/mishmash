@@ -1,10 +1,10 @@
-import { renderProduct } from './products_utils.js'
-import { renderRecipesMenu, renderSaveRecipes } from './recipes_utils.js'
-import { renderMishMashChoice } from './mish_mash_utils.js'
-import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
+import { renderProduct } from './products_utils'
+import { renderRecipesMenu, renderSaveRecipes } from './recipes_utils'
+import { renderMishMashChoice } from './mish_mash_utils'
+import { getFromLocalStorage } from './local_storage_utils'
 
 let activeButton = 'products'
-let saveArrayOfProducts = []
+let saveArrayOfProducts:Array<string> = []
 
 const renderSaveProducts = () => {
     saveArrayOfProducts = saveArrayOfProducts.concat(getFromLocalStorage('products'))
@@ -13,7 +13,7 @@ const renderSaveProducts = () => {
 
     renderedArrayProducts.forEach(object => {
         renderProduct(object)
-        $('.selected-product__text').attr('readOnly', true).css('text-align', 'center')
+        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
     })
 
     saveArrayOfProducts = []
@@ -21,17 +21,17 @@ const renderSaveProducts = () => {
 
 export const renderMenu = () => {
     const action = $('.action')
-    const mishmashTitle = $('<div>').appendTo(action).addClass('title').text('Mishmash')
+    $('<div>').appendTo(action).addClass('title').text('Mishmash')
     const buttonsBox = $('<div>').appendTo(action).addClass('navigation')
     const productsBox = $('<div>').appendTo(action).addClass('products')
-    const firstButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Składniki')
-    let secondButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Przepisy').attr('disabled', 'disabled')
-    let thirdButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Mishmash').attr('disabled', 'disabled')
-    const addButton = $('<button>').appendTo(action).addClass('navigation__add').text('+')
+    $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Składniki')
+    let secondButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Przepisy').attr('disabled', 'true')
+    let thirdButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Mishmash').attr('disabled', 'true')
+    $('<button>').appendTo(action).addClass('navigation__add').text('+')
 
     if (productsBox.has('selected-product')) {
-        secondButton.attr('disabled', false)
-        thirdButton.attr('disabled', false)
+        secondButton.removeAttr('disabled')
+        thirdButton.removeAttr('disabled')
     }
 
     renderSaveProducts()
@@ -74,12 +74,12 @@ export const clickButtons = () => {
 
     $('.navigation__add').click(() => {
         if (activeButton === 'products') {
-            renderProduct()
+            renderProduct('')
         }
 
         if (activeButton === 'recipes') {
             $('.recipes__header--text').val('')
-            $('.recipes__header').toggle('display')
+            $('.recipes__header').toggle()
         }
     })
 }
