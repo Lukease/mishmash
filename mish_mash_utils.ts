@@ -1,6 +1,6 @@
 import { addToRecipe, removeFromRecipe } from './recipes_utils'
 import { getFromLocalStorage } from './local_storage_utils'
-import type { Recipe } from './types'
+import type { Recipe } from './type/recipes'
 
 let selectedProducts: Array<string> = []
 let recipes: Array<Recipe> = []

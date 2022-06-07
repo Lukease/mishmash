@@ -1,25 +1,13 @@
-import { renderProduct } from './products_utils'
-import { renderRecipesMenu, renderSaveRecipes } from './recipes_utils'
-import { renderMishMashChoice } from './mish_mash_utils'
-import { getFromLocalStorage } from './local_storage_utils'
+import {renderProduct} from './products_utils'
+import {renderRecipesMenu, renderSaveRecipes} from './recipes_utils'
+import {renderMishMashChoice} from './mish_mash_utils'
+import {getAllIngredients} from "./database-utils/ingredients-database_utils";
+import {ingredientData} from "./type/ingredient-data";
 
 let activeButton = 'products'
-let products: Array<string> = []
+let products: Array<ingredientData> = []
 
-const renderSaveProducts = () => {
-    products = products.concat(getFromLocalStorage<Array<string>>('products'))
-
-    const renderedArrayProducts = products.toString().split(',')
-
-    renderedArrayProducts.forEach(object => {
-        renderProduct(object)
-        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
-    })
-
-    products = []
-}
-
-export const renderMenu = () => {
+export const renderMenu = async () => {
     const action = $('.action')
 
     $('<div>').appendTo(action).addClass('title').text('Mishmash')
@@ -39,30 +27,30 @@ export const renderMenu = () => {
         thirdButton.removeAttr('disabled')
     }
 
-    renderSaveProducts()
+    await getAllIngredients(products)
 }
 
 renderMenu()
 
 export const clickButtons = () => {
-    $('.navigation__buttons:eq(0)').click(() => {
+    $('.navigation__buttons:eq(0)').click(async () => {
         if (activeButton !== 'products') {
             activeButton = 'products'
             $('.recipes').remove()
             $('.mish-mash').remove()
             $('<div>').appendTo($('.action')).addClass('products')
-            renderSaveProducts()
+            await getAllIngredients(products)
             $('.navigation__add').css('display', 'flex')
         }
     })
 
-    $('.navigation__buttons:eq(1)').click(() => {
+    $('.navigation__buttons:eq(1)').click(async () => {
         if (activeButton !== 'recipes') {
             activeButton = 'recipes'
             $('.products').remove()
             $('.mish-mash').remove()
             renderRecipesMenu()
-            renderSaveRecipes()
+            await renderSaveRecipes()
             $('.navigation__add').css('display', 'flex')
         }
     })
@@ -79,7 +67,7 @@ export const clickButtons = () => {
 
     $('.navigation__add').click(() => {
         if (activeButton === 'products') {
-            renderProduct('')
+            renderProduct('', '')
         }
 
         if (activeButton === 'recipes') {

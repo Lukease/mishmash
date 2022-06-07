@@ -57,6 +57,26 @@ body
   gap: 10px
   align-content: flex-start
   flex-wrap: wrap
+  justify-content: center
+  align-items: center
+
+  &__loader
+    border: 16px solid #f3f3f3
+    border-top: 16px solid #3498db
+    border-radius: 50%
+    width: 60px
+    height: 60px
+    animation: spin 1s linear infinite
+
+  @keyframes spin
+    0%
+      transform: rotate(0deg)
+
+    100%
+      transform: rotate(360deg)
+
+  &__error
+    color: red
 
   &__ingredient
     width: 100px
@@ -181,7 +201,9 @@ button:disabled
   min-height: 20px
   display: flex
   flex-wrap: wrap
-  align-content: flex-start
+  align-items: center
+  justify-content: center
+
 
 .ready-recipe
   width: 100px
@@ -255,4 +277,5 @@ button:disabled
   font-weight: bold
   justify-content: center
   background-color: cadetblue
+
 

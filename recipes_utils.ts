@@ -1,21 +1,13 @@
-import { setToLocalStorage, getFromLocalStorage } from './local_storage_utils.js'
-import type { Recipe } from './types'
+import type {Recipe} from './type/recipes'
+import {deleteRecipe, getAllRecipes} from './database-utils/recipes-database_utils'
+import {ingredient} from './type/ingredients'
+import {getAllIngredients} from './database-utils/ingredients-database_utils'
+import {ingredientData} from './type/ingredient-data'
 
-let saveArrayOfRecipes: Array<Recipe> = []
 let allRecipe: Array<Recipe> = []
 
-export const renderSaveRecipes = () => {
-    const recipes = getFromLocalStorage<Array<Recipe>>('recipes')
-
-    saveArrayOfRecipes = saveArrayOfRecipes.concat(recipes)
-
-    const renderedArrayProducts: Array<Recipe> =  saveArrayOfRecipes
-
-    renderedArrayProducts.forEach(object => {
-        renderRecipes(object.name, object.products)
-    })
-    allRecipe = saveArrayOfRecipes
-    saveArrayOfRecipes = []
+export const renderSaveRecipes = async () => {
+    await getAllRecipes()
 }
 
 export const addToRecipe = (event: JQuery.ClickEvent) => {
@@ -32,7 +24,7 @@ export const removeFromRecipe = (event: JQuery.ClickEvent) => {
     selectedProduct.addClass('recipes__products--div')
 }
 
-export const renderRecipesMenu = () => {
+export const renderRecipesMenu = async () => {
     const recipes = $('<div>').addClass('recipes').appendTo($('.action'))
     const header = $('<div>').addClass('recipes__header').appendTo(recipes).toggle()
     $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
@@ -40,20 +32,18 @@ export const renderRecipesMenu = () => {
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
     $('<div>').addClass('recipe-Box').appendTo('.recipes')
 
-    const products = getFromLocalStorage<Array<string>>('products')
-    let productsName: Array<string> = []
+    // const products = getFromLocalStorage<Array<string>>('products')
 
-    productsName = productsName.concat(products)
-    productsName.toString().split(',')
+    // productsName = productsName.concat(products)
+    // productsName.toString().split(',')
 
-    let splitProductsName = productsName.toString().split(',')
+    const ingredientArray: Array<ingredientData> = []
+    const ingredients = await getAllIngredients(ingredientArray)
 
-    splitProductsName.forEach(productName => {
-        productName = productName.replaceAll('[', '').replaceAll('"', '').replaceAll(']', '')
+    ingredients.forEach(object => {
+        const ingredientDiv = $('<div>').appendTo($(`.recipes__products`)).addClass('recipes__products--div').attr('ingredientsId:', object.ingredientsId).text(object.name)
 
-        const product = $('<div>').addClass('recipes__products--div').appendTo(recipesProducts).text(productName)
-
-        product.click(event => {
+        ingredientDiv.click(event => {
             if (!$(event.target).hasClass('recipes__products--div')) {
                 removeFromRecipe(event)
 
@@ -61,57 +51,53 @@ export const renderRecipesMenu = () => {
             }
             addToRecipe(event)
         })
-
     })
 
-    button.click(event => {
+
+    button.click(() => {
         const recipesName = String($(event.target).siblings().val())
-
-        if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
-            const arrayOfProducts = $('.recipes__products--select').toArray()
-            const array: Array<string> = arrayOfProducts.map(object => object.innerHTML)
-            const recipe: Recipe = {
-                name: recipesName,
-                products: array
-            }
-
-            $('.recipes__header').toggle()
-            renderRecipes(recipe.name, recipe.products)
-
-            allRecipe = allRecipe.concat(recipe)
-
-            setToLocalStorage('recipes', allRecipe)
-        }
+        //
+        // if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
+        //     const arrayOfProducts = $('.recipes__products--select').toArray()
+        //     const array: Array<ingredient> = arrayOfProducts.map(object => object.innerHTML)
+        //     const recipe: Recipe = {
+        //         recipeName: recipesName,
+        //         ingredients: array
+        //     }
+        //
+        //     $('.recipes__header').toggle()
+        //     renderRecipes(recipe.name, recipe.products)
+        //
+        //     allRecipe = allRecipe.concat(recipe)
+        //
+        //     // setToLocalStorage('recipes', allRecipe)
+        // }
     })
 
     return recipes
 }
 
-const renderRecipes = (name: string, array: Array<string>) => {
+export const renderRecipes = (name: string, id: number, array: Array<ingredient>) => {
     const recipesBox = $('.recipe-Box')
-    const readyRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
+    const readyRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox).attr('recipesId:', id)
     const trashIcon = $('<button>').appendTo(readyRecipe).addClass('ready-recipe__trash')
 
     $('<div>').addClass('ready-recipe__title').appendTo(readyRecipe).text(`Name: `).css('font-weight', 'bold').css('justify-content', 'center')
     $('<div>').addClass('ready-recipe__name').appendTo(readyRecipe).text(name)
     $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text('Products: ').css('font-weight', 'bold').css('justify-content', 'center')
+
     array.forEach(product => {
-        $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text(product)
+        $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text(product.ingredientName)
     })
 
-    trashIcon.click(event => {
+    trashIcon.click(async event => {
         const selectedProduct = $(event.target)
 
         selectedProduct.parents('.ready-recipe').remove()
 
-        const name = selectedProduct.siblings('.ready-recipe__name').text()
+        const recipesId: string = String(selectedProduct.parent('.ready-recipe').attr('recipesId:'))
 
-        allRecipe?.forEach((object, index) => {
-            if (object.name === name) {
-                allRecipe = [...allRecipe.slice(0, index), ...allRecipe.slice(index + 1)]
-            }
-        })
-        setToLocalStorage('recipes', allRecipe)
+        await deleteRecipe(recipesId)
     })
 }
 

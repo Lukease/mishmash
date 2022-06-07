@@ -1,10 +1,16 @@
-import { getFromLocalStorage, setToLocalStorage } from './local_storage_utils'
+import {
+    addNewIngredient,
+    deleteIngredient,
+    editIngredient,
+} from './database-utils/ingredients-database_utils'
+import {ingredient} from './type/ingredients'
 
 let productsSpecial: Set<string> = new Set()
-let products: Array<string> = []
+let products: Array<ingredient> = []
 
-const deleteProduct = (event: JQuery.ClickEvent) => {
+const deleteProduct = async (event: JQuery.ClickEvent) => {
     const selectedProduct = $(event.target)
+    const ingredientId: string = selectedProduct.parents('.selected-product').attr('ingredientsid:')
 
     selectedProduct.parents('.selected-product').remove()
 
@@ -12,11 +18,9 @@ const deleteProduct = (event: JQuery.ClickEvent) => {
 
     productsSpecial.delete(deleteProductName)
 
-    const newArrayProduct: Array<string> = [...productsSpecial]
+    await deleteIngredient(ingredientId)
 
-    setToLocalStorage('products', newArrayProduct)
-
-    if (productsSpecial.size === 0) {
+    if (!$('.products').has('selected-product')) {
         $('.navigation__buttons:eq(1)').attr('disabled', 'true')
         $('.navigation__buttons:eq(2)').attr('disabled', 'true')
     }
@@ -24,86 +28,78 @@ const deleteProduct = (event: JQuery.ClickEvent) => {
     return productsSpecial
 }
 
-const editProduct = (event: JQuery.ClickEvent) => {
-    const editProduct = $(event.target)
+const editProduct = async (event: JQuery.ClickEvent) => {
+    const product = $(event.target).parent('.selected-product')
+    const ingredientId: number = parseInt(product.attr('ingredientsid:'))
 
-    editProduct.siblings('.selected-product__text').css('text-align', 'left').attr('readOnly', 'false')
+    product.css('display', 'none')
 
-    const deleteProductName = String(editProduct.siblings('.selected-product__text').val())
+    const newProduct = $('<input>').appendTo('.products').addClass('selected-product').css('background-color', 'white').css('text-align', 'center')
 
-    productsSpecial.delete(deleteProductName)
+    newProduct.on('change', async () => {
+        const newName: string = String(newProduct.val())
 
-    const newArrayProduct = [...productsSpecial]
+        await editIngredient(ingredientId, newName)
 
-    setToLocalStorage('products', newArrayProduct)
-
-    return productsSpecial
+        product.css('display', 'flex')
+        $(event.target).siblings('.selected-product__text').val(newName)
+        newProduct.remove()
+    })
 }
 
-const addLocalStorageToProducts = () => {
-    const products = getFromLocalStorage<Array<string>>('products')
 
-    products?.forEach(product => productsSpecial.add(product))
-}
-
-addLocalStorageToProducts()
-
-export const addProductText = (event: JQuery.ChangeEvent) => {
+export const addProductText = async (event: JQuery.ChangeEvent) => {
     const selectedProduct = $(event.target)
-    const addProductName = String(selectedProduct.val())
+    const addProductName: string = String(selectedProduct.val())
 
     productsSpecial.add(addProductName)
-    products = [...productsSpecial]
-    setToLocalStorage('products', products)
+    await addNewIngredient(addProductName)
 
-    $('.products').children().remove()
-
-    if (productsSpecial.size !== 0) {
+    if ($('.products').has('selected-product')) {
         $('.navigation__buttons:eq(1)').removeAttr('disabled')
         $('.navigation__buttons:eq(2)').removeAttr('disabled')
     }
 
-    products.forEach(object => {
-        renderProduct(object)
-
+    products.forEach(() => {
         $('.selected-product__icon-trash').click(event => {
             deleteProduct(event)
         })
 
-        $('.selected-product__icon-edit').click(event => {
-            editProduct(event)
+        $('.selected-product__icon-edit').click(async event => {
+            await editProduct(event)
         })
 
-        $('.selected-product__text').on('change', event => {
+        $('.selected-product__text').on('change', async event => {
             const selectedProduct = $(event.target)
             const addProductName = String(selectedProduct.val())
 
             productsSpecial.add(addProductName)
-            products = [...productsSpecial]
-            setToLocalStorage('products', products)
+
+            await addNewIngredient(addProductName)
         })
     })
 
     return products
 }
 
-export const renderProduct = (text:string) => {
-    const productBox = $('<div>').appendTo($('.products')).addClass('selected-product')
+export const renderProduct = (text: string, id: string) => {
+    const productBox = $('<div>').appendTo($(`.products`)).addClass('selected-product').attr('ingredientsId:', id)
+    const textInput = $('<input>').appendTo(productBox).addClass('selected-product__text').attr('placeholder', 'wpisz nazwe produktu').val(text)
+    const trashInput = $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
+    const editInput = $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
 
-    $('<input>').appendTo(productBox).addClass('selected-product__text').attr('placeholder', 'wpisz nazwe produktu').val(text)
-    $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
-    $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
-
-    $('.selected-product__text').on('change', event => {
-        addProductText(event)
-        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
+    textInput.on('change', async event => {
+            await addProductText(event)
+            $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
     })
 
-    $('.selected-product__icon-trash').click(event => {
-        deleteProduct(event)
+    trashInput.click(async event => {
+        await deleteProduct(event)
     })
 
-    $('.selected-product__icon-edit').click(deleteProduct)
+    editInput.click(async event => {
+            await editProduct(event)
+    })
 
     return productBox
 }
