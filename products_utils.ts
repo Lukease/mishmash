@@ -2,8 +2,14 @@ import {
     addNewIngredient,
     deleteIngredient,
     editIngredient,
-} from './database-utils/ingredients-database_utils'
+} from './http-client/ingredients-database_utils'
 import {ingredient} from './type/ingredients'
+import {
+    deleteRecipesIngredients,
+    findOneRecipes,
+    getRecipesIngredientsId
+} from './http-client/recipesIngredients-database_utils'
+import {deleteRecipe} from './http-client/recipes-database_utils'
 
 let productsSpecial: Set<string> = new Set()
 let products: Array<ingredient> = []
@@ -18,6 +24,16 @@ const deleteProduct = async (event: JQuery.ClickEvent) => {
 
     productsSpecial.delete(deleteProductName)
 
+    const recipe = await findOneRecipes(parseInt(ingredientId))
+    const [recipeId] = recipe
+    const recipesIngredientsId: Array<number> = await getRecipesIngredientsId(recipeId.recipesId)
+
+    recipesIngredientsId.forEach(recipesIngredientsId => {
+        deleteRecipesIngredients(recipesIngredientsId)
+    })
+    recipe.forEach(number => {
+        deleteRecipe(number.recipesId)
+    })
     await deleteIngredient(ingredientId)
 
     if (!$('.products').has('selected-product')) {
@@ -53,6 +69,7 @@ export const addProductText = async (event: JQuery.ChangeEvent) => {
     const addProductName: string = String(selectedProduct.val())
 
     productsSpecial.add(addProductName)
+
     await addNewIngredient(addProductName)
 
     if ($('.products').has('selected-product')) {
@@ -89,8 +106,8 @@ export const renderProduct = (text: string, id: string) => {
     const editInput = $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
 
     textInput.on('change', async event => {
-            await addProductText(event)
-            $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
+        await addProductText(event)
+        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
     })
 
     trashInput.click(async event => {
@@ -98,7 +115,7 @@ export const renderProduct = (text: string, id: string) => {
     })
 
     editInput.click(async event => {
-            await editProduct(event)
+        await editProduct(event)
     })
 
     return productBox

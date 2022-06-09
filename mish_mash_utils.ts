@@ -1,39 +1,32 @@
-import { addToRecipe, removeFromRecipe } from './recipes_utils'
-import { getFromLocalStorage } from './local_storage_utils'
-import type { Recipe } from './type/recipes'
+import {addToRecipe, removeFromRecipe} from './recipes_utils'
+import {ingredientData} from './type/ingredient-data'
+import {getAllIngredients} from './http-client/ingredients-database_utils'
+import {findRecipes} from './http-client/recipesIngredients-database_utils'
+import {OneRecipe} from './type/one-recipe'
 
-let selectedProducts: Array<string> = []
-let recipes: Array<Recipe> = []
+let selectedProductsId: Array<number> = []
 
-const renderCorrectRecipes = (name: string, data: Array<string>) => {
+const renderCorrectRecipes = (name: string) => {
     const recipesBox = $('.recipe-Box')
     const correctRecipe = $('<div>').addClass('ready-recipe').appendTo(recipesBox)
 
-    $('<div>').addClass('ready-recipe__title').appendTo(correctRecipe).text(`Name: `).css('font-weight', 'bold').css('justify-content', 'center')
-    $('<div>').addClass('ready-recipe__name').appendTo(correctRecipe).text(name)
-    $('<div>').addClass('ready-recipe__product').appendTo(correctRecipe).text('Products: ').css('font-weight', 'bold').css('justify-content', 'center')
-    data.forEach(product => {
-        $('<div>').addClass('ready-recipe__product').appendTo(correctRecipe).text(product)
-    })
+    $('<div>').addClass('ready-recipe__name').appendTo(correctRecipe).text(name).css('font-weight', 'bold').css('justify-content', 'center')
 
     return recipesBox
 }
 
-export const renderMishMashChoice = () => {
+export const renderMishMashChoice = async () => {
     const mishMash = $('<div>').addClass('mish-mash').appendTo($('.action'))
     const mishMashProducts = $('<div>').addClass('mish-mash__product').appendTo(mishMash)
     $('<div>').addClass('mish-mash__matching-recipe').appendTo('.recipes')
     $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
     $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
 
-    const products = getFromLocalStorage<Array<string>>('products')
+    const ingredientArray: Array<ingredientData> = []
+    const ingredients = await getAllIngredients(ingredientArray)
 
-    let productsName: Array<string> = []
-
-    recipes = getFromLocalStorage<Array<Recipe>>('recipes')
-    productsName = productsName.concat(products)
-    productsName.forEach(product => {
-        const newProduct = $('<div>').addClass('recipes__products--div').appendTo(mishMashProducts).text(product)
+    ingredients.forEach(product => {
+        const newProduct = $('<div>').addClass('recipes__products--div').appendTo(mishMashProducts).text(product.name).attr('ingredientsId:', product.ingredientsId)
 
         newProduct.click(event => {
             $('.recipe-Box').children('.ready-recipe').remove()
@@ -42,21 +35,24 @@ export const renderMishMashChoice = () => {
                 removeFromRecipe(event)
                 findCorrectRecipe()
 
+                const ingredientsId: number = parseInt($(event.target).attr('ingredientsid:'))
+
+                selectedProductsId = selectedProductsId.filter(id => id !== ingredientsId)
+
                 return
             }
             addToRecipe(event)
             findCorrectRecipe()
+            const ingredientsId: number = parseInt($(event.target).attr('ingredientsid:'))
+            selectedProductsId = selectedProductsId.concat(ingredientsId)
         })
     })
 }
 
-const findCorrectRecipe = () => {
-    selectedProducts = $('.recipes__products--select').toArray().map(object => object.innerHTML)
-    recipes.forEach(recipes => {
-        const correctProducts = recipes.products.every((product) => selectedProducts.includes(product))
+const findCorrectRecipe = async () => {
+    const arrayOfCorrectRecipes: Array<OneRecipe> = await findRecipes(selectedProductsId)
 
-        if (correctProducts === true) {
-            renderCorrectRecipes(recipes.name, recipes.products)
-        }
+    arrayOfCorrectRecipes.forEach(recipes => {
+        renderCorrectRecipes(recipes.name)
     })
 }

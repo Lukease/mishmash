@@ -1,5 +1,5 @@
-import {renderProduct} from "../products_utils";
-import {ingredientData} from "../type/ingredient-data";
+import {renderProduct} from '../products_utils'
+import {ingredientData} from '../type/ingredient-data'
 
 export const getAllIngredients = async (ingredientsArray: Array<ingredientData>) => {
     const loader = $('<div>').addClass('products__loader').appendTo($('.products'))
@@ -31,7 +31,7 @@ export const deleteIngredient = async (ingredientId: string) => {
         method: 'DELETE',
     })
         .catch(error => {
-            $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
+            alert(error)
         })
 }
 
@@ -44,12 +44,11 @@ export const editIngredient = async (ingredientId: number, newName: string) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-                ingredientId: ingredientId,
-                newIngredientName: newName
-            })
+            ingredientId: ingredientId,
+            newIngredientName: newName
+        })
     })
         .then((response) => response.json())
-        .then((json) => console.log(json))
         .catch(error => {
             alert(error)
         })
@@ -72,7 +71,6 @@ export const getOneIngredients = async (ingredientsArray: string) => {
     })
         .then(async res => {
             ingredientsArray = ingredientsArray.concat(JSON.parse(await res.text()))
-
         })
         .catch(error => {
             alert(error)

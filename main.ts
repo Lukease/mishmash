@@ -1,8 +1,8 @@
 import {renderProduct} from './products_utils'
 import {renderRecipesMenu, renderSaveRecipes} from './recipes_utils'
 import {renderMishMashChoice} from './mish_mash_utils'
-import {getAllIngredients} from "./database-utils/ingredients-database_utils";
-import {ingredientData} from "./type/ingredient-data";
+import {getAllIngredients} from './http-client/ingredients-database_utils'
+import {ingredientData} from './type/ingredient-data'
 
 let activeButton = 'products'
 let products: Array<ingredientData> = []

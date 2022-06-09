@@ -1,10 +1,12 @@
-import type {Recipe} from './type/recipes'
-import {deleteRecipe, getAllRecipes} from './database-utils/recipes-database_utils'
+import {addNewRecipe, deleteRecipe, getAllRecipes, getOneRecipe} from './http-client/recipes-database_utils'
 import {ingredient} from './type/ingredients'
-import {getAllIngredients} from './database-utils/ingredients-database_utils'
+import {getAllIngredients} from './http-client/ingredients-database_utils'
 import {ingredientData} from './type/ingredient-data'
-
-let allRecipe: Array<Recipe> = []
+import {
+    addNewRecipesIngredients,
+    deleteRecipesIngredients,
+    getRecipesIngredientsId
+} from './http-client/recipesIngredients-database_utils'
 
 export const renderSaveRecipes = async () => {
     await getAllRecipes()
@@ -27,15 +29,13 @@ export const removeFromRecipe = (event: JQuery.ClickEvent) => {
 export const renderRecipesMenu = async () => {
     const recipes = $('<div>').addClass('recipes').appendTo($('.action'))
     const header = $('<div>').addClass('recipes__header').appendTo(recipes).toggle()
+
     $('<input>').addClass('recipes__header--text').appendTo(header).attr('placeholder', 'wpisz nazwe przepisu').css('margin-left', '20px')
-    const recipesProducts = $('<div>').addClass('recipes__products').appendTo(recipes)
+    $('<div>').addClass('recipes__products').appendTo(recipes)
+
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
+
     $('<div>').addClass('recipe-Box').appendTo('.recipes')
-
-    // const products = getFromLocalStorage<Array<string>>('products')
-
-    // productsName = productsName.concat(products)
-    // productsName.toString().split(',')
 
     const ingredientArray: Array<ingredientData> = []
     const ingredients = await getAllIngredients(ingredientArray)
@@ -54,24 +54,33 @@ export const renderRecipesMenu = async () => {
     })
 
 
-    button.click(() => {
+    button.click(async event => {
         const recipesName = String($(event.target).siblings().val())
-        //
-        // if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
-        //     const arrayOfProducts = $('.recipes__products--select').toArray()
-        //     const array: Array<ingredient> = arrayOfProducts.map(object => object.innerHTML)
-        //     const recipe: Recipe = {
-        //         recipeName: recipesName,
-        //         ingredients: array
-        //     }
-        //
-        //     $('.recipes__header').toggle()
-        //     renderRecipes(recipe.name, recipe.products)
-        //
-        //     allRecipe = allRecipe.concat(recipe)
-        //
-        //     // setToLocalStorage('recipes', allRecipe)
-        // }
+
+        if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
+            const arrayOfProducts = $('.recipes__products--select').toArray()
+            const array: Array<string> = arrayOfProducts.map(object => object.getAttribute('ingredientsid:'))
+
+            await addNewRecipe(recipesName)
+            setTimeout(async () => {
+                const recipe = await getOneRecipe(recipesName)
+
+                array.forEach(object => {
+                    const ingredientsId: number = parseInt(String(object))
+                    const recipeId: number = recipe.recipesId
+                    addNewRecipesIngredients(ingredientsId, recipeId)
+                })
+
+                header.toggle()
+                $('.recipe-Box').remove()
+            }, 100)
+
+            setTimeout(async () => {
+                $('<div>').addClass('recipe-Box').appendTo('.recipes')
+
+                await renderSaveRecipes()
+            }, 200)
+        }
     })
 
     return recipes
@@ -87,7 +96,7 @@ export const renderRecipes = (name: string, id: number, array: Array<ingredient>
     $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text('Products: ').css('font-weight', 'bold').css('justify-content', 'center')
 
     array.forEach(product => {
-        $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text(product.ingredientName)
+        $('<div>').addClass('ready-recipe__product').appendTo(readyRecipe).text(product.ingredientName).attr('ingredientId:', product.ingredientId)
     })
 
     trashIcon.click(async event => {
@@ -95,9 +104,13 @@ export const renderRecipes = (name: string, id: number, array: Array<ingredient>
 
         selectedProduct.parents('.ready-recipe').remove()
 
-        const recipesId: string = String(selectedProduct.parent('.ready-recipe').attr('recipesId:'))
+        const recipeId: number = parseInt(selectedProduct.parent('.ready-recipe').attr('recipesId:'))
+        const recipesIngredientsId: Array<number> = await getRecipesIngredientsId(recipeId)
 
-        await deleteRecipe(recipesId)
+        recipesIngredientsId.forEach(recipesIngredientsId => {
+            deleteRecipesIngredients(recipesIngredientsId)
+        })
+        await deleteRecipe(recipeId)
     })
 }
 
