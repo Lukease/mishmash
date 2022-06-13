@@ -49,7 +49,6 @@ export const renderMishMashChoice = async () => {
                 const ingredientsId: number = parseInt($(event.target).attr('ingredientsId:'))
 
                 selectedProductsId = selectedProductsId.concat(ingredientsId)
-
                 findCorrectRecipe()
         })
     })

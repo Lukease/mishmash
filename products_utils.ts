@@ -90,7 +90,6 @@ export const addProductText = async (event: JQuery.ChangeEvent) => {
             const addProductName = String(selectedProduct.val())
 
             productsSpecial.add(addProductName)
-
             await addNewIngredient(addProductName)
         })
     })
