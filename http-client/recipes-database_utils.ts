@@ -1,16 +1,21 @@
 import {Recipe} from '../type/recipes'
 import {renderRecipes} from '../recipes_utils'
-import {OneRecipe} from '../type/one-recipe'
 
-export const getAllRecipes = async () => {
+export const getAllRecipes = () => {
     let recipesArray: Array<Recipe> = []
     const loader = $('<div>').addClass('products__loader').appendTo($('.recipe-Box'))
     const url = 'http://localhost:3001/recipes/by-all'
-    await fetch(url, {
+
+    return fetch(url, {
         method: 'GET'
     })
         .then(async res => {
             recipesArray = recipesArray.concat(JSON.parse(await res.text()))
+        })
+        .then(() => {
+            recipesArray.forEach(recipe => {
+                renderRecipes(recipe.recipeName, recipe.recipeId, recipe.ingredients)
+            })
         })
         .catch(error => {
             $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
@@ -18,28 +23,24 @@ export const getAllRecipes = async () => {
         .finally(() => {
             loader.remove()
         })
-
-    recipesArray.forEach(recipe => {
-        renderRecipes(recipe.recipeName, recipe.recipeId, recipe.ingredients)
-    })
-
-    return recipesArray
 }
 
-export const deleteRecipe = async (recipeId: number) => {
+export const deleteRecipe = (recipeId: number) => {
     const url: string = `http://localhost:3001/recipes?recipesId=${recipeId}`
-    await fetch(url, {
+
+    return fetch(url, {
         method: 'DELETE',
     })
         .then((response) => response.json())
         .catch(error => {
-            alert(error)
+            alert(JSON.stringify(error))
         })
 }
 
-export const addNewRecipe = async (recipeName: string) => {
+export const addNewRecipe = (recipeName: string) => {
     const url = `http://localhost:3001/recipes?recipeName=${recipeName}`
-    fetch(url, {
+
+    return fetch(url, {
         method: 'POST',
     })
         .catch(error => {
@@ -47,18 +48,16 @@ export const addNewRecipe = async (recipeName: string) => {
         })
 }
 
-export const getOneRecipe = async (recipesName: string) => {
-    let recipe: OneRecipe
+export const getOneRecipe = (recipesName: string) => {
     const url = `http://localhost:3001/recipes/by-name?recipeName=${recipesName}`
-    await fetch(url, {
+
+    return fetch(url, {
         method: 'GET',
     })
         .then(async res => {
-            recipe = JSON.parse(await res.text())
+            return  JSON.parse(await res.text())
         })
         .catch(error => {
             $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
         })
-
-    return recipe
 }

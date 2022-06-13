@@ -30,7 +30,7 @@ export const renderMenu = async () => {
     await getAllIngredients(products)
 }
 
-renderMenu()
+await renderMenu()
 
 export const clickButtons = () => {
     $('.navigation__buttons:eq(0)').click(async () => {
@@ -49,18 +49,18 @@ export const clickButtons = () => {
             activeButton = 'recipes'
             $('.products').remove()
             $('.mish-mash').remove()
-            renderRecipesMenu()
+            await renderRecipesMenu()
             await renderSaveRecipes()
             $('.navigation__add').css('display', 'flex')
         }
     })
 
-    $('.navigation__buttons:eq(2)').click(() => {
+    $('.navigation__buttons:eq(2)').click(async () => {
         if (activeButton !== 'mishMash') {
             activeButton = 'mishMash'
             $('.products').remove()
             $('.recipes').remove()
-            renderMishMashChoice()
+            await renderMishMashChoice()
             $('.navigation__add').css('display', 'none')
         }
     })
@@ -68,6 +68,7 @@ export const clickButtons = () => {
     $('.navigation__add').click(() => {
         if (activeButton === 'products') {
             renderProduct('', '')
+            $('.error-menu').remove()
         }
 
         if (activeButton === 'recipes') {

@@ -7,9 +7,10 @@ import {
     deleteRecipesIngredients,
     getRecipesIngredientsId
 } from './http-client/recipesIngredients-database_utils'
+import {OneRecipe} from "./type/one-recipe";
 
-export const renderSaveRecipes = async () => {
-    await getAllRecipes()
+export const renderSaveRecipes = () => {
+    getAllRecipes()
 }
 
 export const addToRecipe = (event: JQuery.ClickEvent) => {
@@ -34,11 +35,10 @@ export const renderRecipesMenu = async () => {
     $('<div>').addClass('recipes__products').appendTo(recipes)
 
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
-
-    $('<div>').addClass('recipe-Box').appendTo('.recipes')
+    const recipeBox = $('<div>').addClass('recipe-Box').appendTo('.recipes')
 
     const ingredientArray: Array<ingredientData> = []
-    const ingredients = await getAllIngredients(ingredientArray)
+    const ingredients: Array<ingredientData> = await getAllIngredients(ingredientArray)
 
     ingredients.forEach(object => {
         const ingredientDiv = $('<div>').appendTo($(`.recipes__products`)).addClass('recipes__products--div').attr('ingredientsId:', object.ingredientsId).text(object.name)
@@ -53,33 +53,32 @@ export const renderRecipesMenu = async () => {
         })
     })
 
-
     button.click(async event => {
         const recipesName = String($(event.target).siblings().val())
 
         if (recipesName !== '' && $('.recipes__products').children().hasClass('recipes__products--select')) {
             const arrayOfProducts = $('.recipes__products--select').toArray()
-            const array: Array<string> = arrayOfProducts.map(object => object.getAttribute('ingredientsid:'))
+            const array: Array<string> = arrayOfProducts.map(object => object.getAttribute('ingredientsId:'))
 
             await addNewRecipe(recipesName)
-            setTimeout(async () => {
-                const recipe = await getOneRecipe(recipesName)
 
-                array.forEach(object => {
+            const recipe: OneRecipe = await getOneRecipe(recipesName)
+
+            const addRecipeToDatabase = async () => {
+                for (const object of array) {
                     const ingredientsId: number = parseInt(String(object))
                     const recipeId: number = recipe.recipesId
-                    addNewRecipesIngredients(ingredientsId, recipeId)
-                })
 
-                header.toggle()
-                $('.recipe-Box').remove()
-            }, 100)
+                    await addNewRecipesIngredients(ingredientsId, recipeId)
+                }
+            }
+            await addRecipeToDatabase()
+            header.toggle()
+            recipeBox.children('.ready-recipe').remove()
 
-            setTimeout(async () => {
-                $('<div>').addClass('recipe-Box').appendTo('.recipes')
+            $(event.target).siblings().val('')
 
-                await renderSaveRecipes()
-            }, 200)
+            renderSaveRecipes()
         }
     })
 

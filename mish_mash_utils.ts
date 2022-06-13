@@ -18,9 +18,12 @@ const renderCorrectRecipes = (name: string) => {
 export const renderMishMashChoice = async () => {
     const mishMash = $('<div>').addClass('mish-mash').appendTo($('.action'))
     const mishMashProducts = $('<div>').addClass('mish-mash__product').appendTo(mishMash)
+
     $('<div>').addClass('mish-mash__matching-recipe').appendTo('.recipes')
     $('<div>').addClass('title-mish-mash').appendTo(mishMash).text('you can prepare with selected ingredients: ')
     $('<div>').appendTo('.mish-mash').addClass('recipe-Box')
+
+    selectedProductsId = []
 
     const ingredientArray: Array<ingredientData> = []
     const ingredients = await getAllIngredients(ingredientArray)
@@ -33,18 +36,21 @@ export const renderMishMashChoice = async () => {
 
             if (!$(event.target).hasClass('recipes__products--div')) {
                 removeFromRecipe(event)
-                findCorrectRecipe()
 
-                const ingredientsId: number = parseInt($(event.target).attr('ingredientsid:'))
+                const ingredientsId: number = parseInt($(event.target).attr('ingredientsId:'))
 
                 selectedProductsId = selectedProductsId.filter(id => id !== ingredientsId)
+                findCorrectRecipe()
 
                 return
             }
-            addToRecipe(event)
-            findCorrectRecipe()
-            const ingredientsId: number = parseInt($(event.target).attr('ingredientsid:'))
-            selectedProductsId = selectedProductsId.concat(ingredientsId)
+                addToRecipe(event)
+
+                const ingredientsId: number = parseInt($(event.target).attr('ingredientsId:'))
+
+                selectedProductsId = selectedProductsId.concat(ingredientsId)
+
+                findCorrectRecipe()
         })
     })
 }

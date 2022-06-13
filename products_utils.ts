@@ -5,20 +5,17 @@ import {
 } from './http-client/ingredients-database_utils'
 import {ingredient} from './type/ingredients'
 import {
-    deleteRecipesIngredients,
     findOneRecipes,
-    getRecipesIngredientsId
 } from './http-client/recipesIngredients-database_utils'
-import {deleteRecipe} from './http-client/recipes-database_utils'
 
 let productsSpecial: Set<string> = new Set()
 let products: Array<ingredient> = []
 
 const deleteProduct = async (event: JQuery.ClickEvent) => {
-    const selectedProduct = $(event.target)
-    const ingredientId: string = selectedProduct.parents('.selected-product').attr('ingredientsid:')
+    $('.error-menu').remove()
 
-    selectedProduct.parents('.selected-product').remove()
+    const selectedProduct = $(event.target)
+    const ingredientId: string = selectedProduct.parents('.selected-product').attr('ingredientsId:')
 
     const deleteProductName = String(selectedProduct.siblings('.selected-product__text').val())
 
@@ -26,15 +23,15 @@ const deleteProduct = async (event: JQuery.ClickEvent) => {
 
     const recipe = await findOneRecipes(parseInt(ingredientId))
     const [recipeId] = recipe
-    const recipesIngredientsId: Array<number> = await getRecipesIngredientsId(recipeId.recipesId)
 
-    recipesIngredientsId.forEach(recipesIngredientsId => {
-        deleteRecipesIngredients(recipesIngredientsId)
-    })
-    recipe.forEach(number => {
-        deleteRecipe(number.recipesId)
-    })
-    await deleteIngredient(ingredientId)
+    if (recipeId !== undefined) {
+        $('<div>').addClass('error-menu').appendTo('.products').text('First remove recipe ')
+    }
+
+    if (recipeId === undefined) {
+        await deleteIngredient(ingredientId)
+        selectedProduct.parents('.selected-product').remove()
+    }
 
     if (!$('.products').has('selected-product')) {
         $('.navigation__buttons:eq(1)').attr('disabled', 'true')
@@ -45,8 +42,10 @@ const deleteProduct = async (event: JQuery.ClickEvent) => {
 }
 
 const editProduct = async (event: JQuery.ClickEvent) => {
+    $('.error-menu').remove()
+
     const product = $(event.target).parent('.selected-product')
-    const ingredientId: number = parseInt(product.attr('ingredientsid:'))
+    const ingredientId: number = parseInt(product.attr('ingredientsId:'))
 
     product.css('display', 'none')
 

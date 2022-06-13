@@ -4,6 +4,7 @@ import {ingredientData} from '../type/ingredient-data'
 export const getAllIngredients = async (ingredientsArray: Array<ingredientData>) => {
     const loader = $('<div>').addClass('products__loader').appendTo($('.products'))
     const url = 'http://localhost:3001/ingredients'
+
     await fetch(url, {
         method: 'GET'
     })
@@ -25,19 +26,23 @@ export const getAllIngredients = async (ingredientsArray: Array<ingredientData>)
     return ingredientsArray
 }
 
-export const deleteIngredient = async (ingredientId: string) => {
+export const deleteIngredient = (ingredientId: string) => {
     const url: string = `http://localhost:3001/ingredients?ingredientsId=${ingredientId}`
-    await fetch(url, {
+
+    return fetch(url, {
         method: 'DELETE',
     })
+        .then((response) => response.json())
         .catch(error => {
             alert(error)
         })
+
 }
 
 export const editIngredient = async (ingredientId: number, newName: string) => {
     const url = 'http://localhost:3001/ingredients'
-    await fetch(url, {
+
+    return fetch(url, {
         method: 'PATCH',
         headers: {
             Accept: 'application/json',
@@ -56,25 +61,12 @@ export const editIngredient = async (ingredientId: number, newName: string) => {
 
 export const addNewIngredient = async (ingredientName: string) => {
     const url = `http://localhost:3001/ingredients?ingredientName=${ingredientName}`
-    fetch(url, {
+
+    return fetch(url, {
         method: 'POST',
     })
+        .then((response) => response.json())
         .catch(error => {
             alert(`cant add ${ingredientName}` + error)
         })
-}
-
-export const getOneIngredients = async (ingredientsArray: string) => {
-    const url = 'http://localhost:3001/ingredients'
-    await fetch(url, {
-        method: 'GET'
-    })
-        .then(async res => {
-            ingredientsArray = ingredientsArray.concat(JSON.parse(await res.text()))
-        })
-        .catch(error => {
-            alert(error)
-        })
-
-    return ingredientsArray
 }
