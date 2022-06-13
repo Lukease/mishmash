@@ -7,7 +7,7 @@ import {
     deleteRecipesIngredients,
     getRecipesIngredientsId
 } from './http-client/recipesIngredients-database_utils'
-import {OneRecipe} from "./type/one-recipe";
+import {OneRecipe} from './type/one-recipe'
 
 export const renderSaveRecipes = () => {
     getAllRecipes()
@@ -36,7 +36,6 @@ export const renderRecipesMenu = async () => {
 
     const button = $('<button>').addClass('recipes__header--button').appendTo(header).text('add')
     const recipeBox = $('<div>').addClass('recipe-Box').appendTo('.recipes')
-
     const ingredientArray: Array<ingredientData> = []
     const ingredients: Array<ingredientData> = await getAllIngredients(ingredientArray)
 
