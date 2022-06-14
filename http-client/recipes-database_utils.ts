@@ -1,63 +1,63 @@
-import {Recipe} from '../type/recipes'
-import {renderRecipes} from '../recipes_utils'
+import { Recipe } from '../types'
+import { renderRecipes } from '../recipes_utils'
+import { baseUrl } from '../fetch-config'
 
 export const getAllRecipes = () => {
     let recipesArray: Array<Recipe> = []
-    const loader = $('<div>').addClass('products__loader').appendTo($('.recipe-Box'))
-    const url = 'http://localhost:3001/recipes/by-all'
+    const loader = $('<div>')
+        .addClass('products__loader')
+        .appendTo($('.recipe-Box'))
 
-    return fetch(url, {
-        method: 'GET'
-    })
-        .then(async res => {
-            recipesArray = recipesArray.concat(JSON.parse(await res.text()))
+    return fetch(`${baseUrl}recipes/by-all`)
+        .then(async response => {
+            recipesArray = recipesArray.concat(JSON.parse(await response.text()))
         })
         .then(() => {
             recipesArray.forEach(recipe => {
                 renderRecipes(recipe.recipeName, recipe.recipeId, recipe.ingredients)
             })
         })
-        .catch(error => {
-            $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
+        .catch(function (error: string){
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.recipes'))
         })
-        .finally(() => {
+        .then(() => {
             loader.remove()
         })
 }
 
 export const deleteRecipe = (recipeId: number) => {
-    const url: string = `http://localhost:3001/recipes?recipesId=${recipeId}`
-
-    return fetch(url, {
+    return fetch(`${baseUrl}recipes?recipesId=${recipeId}`, {
         method: 'DELETE',
     })
-        .then((response) => response.json())
+        .then(response => response.json())
         .catch(error => {
-            alert(JSON.stringify(error))
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.recipes'))
         })
 }
 
 export const addNewRecipe = (recipeName: string) => {
-    const url = `http://localhost:3001/recipes?recipeName=${recipeName}`
-
-    return fetch(url, {
+    return fetch(`${baseUrl}recipes?recipeName=${recipeName}`, {
         method: 'POST',
     })
         .catch(error => {
-            alert(`cant add ${recipeName}` + error)
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.recipes'))
         })
 }
 
 export const getOneRecipe = (recipesName: string) => {
-    const url = `http://localhost:3001/recipes/by-name?recipeName=${recipesName}`
-
-    return fetch(url, {
-        method: 'GET',
-    })
+    return fetch(`${baseUrl}recipes/by-name?recipeName=${recipesName}`)
         .then(async res => {
             return  JSON.parse(await res.text())
         })
         .catch(error => {
-            $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.recipes'))
         })
 }

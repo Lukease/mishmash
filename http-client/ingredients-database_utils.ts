@@ -1,48 +1,51 @@
-import {renderProduct} from '../products_utils'
-import {ingredientData} from '../type/ingredient-data'
+import { renderProduct } from '../products_utils'
+import { ingredientData } from '../types'
+import { baseUrl } from '../fetch-config'
 
 export const getAllIngredients = async (ingredientsArray: Array<ingredientData>) => {
-    const loader = $('<div>').addClass('products__loader').appendTo($('.products'))
-    const url = 'http://localhost:3001/ingredients'
+    const loader = $('<div>')
+        .addClass('products__loader')
+        .appendTo($('.products'))
 
-    await fetch(url, {
-        method: 'GET'
-    })
+    await fetch(`${baseUrl}ingredients`)
         .then(async res => {
             ingredientsArray = ingredientsArray.concat(JSON.parse(await res.text()))
         })
         .catch(error => {
-            $('<div>').addClass('products__error').text(error).appendTo($('.loader-container')).css('color', 'red').css('font-size', '30px')
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.products'))
         })
         .finally(() => {
             loader.remove()
         })
 
-    ingredientsArray.forEach((object) => {
+    ingredientsArray.forEach( object => {
         renderProduct(object.name, object.ingredientsId)
-        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
+
+        $('.selected-product__text')
+            .attr('readOnly', 'true')
+            .css('text-align', 'center')
     })
 
     return ingredientsArray
 }
 
 export const deleteIngredient = (ingredientId: string) => {
-    const url: string = `http://localhost:3001/ingredients?ingredientsId=${ingredientId}`
-
-    return fetch(url, {
+    return fetch(`${baseUrl}ingredients?ingredientsId=${ingredientId}`, {
         method: 'DELETE',
     })
         .then((response) => response.json())
         .catch(error => {
-            alert(error)
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.products'))
         })
 
 }
 
 export const editIngredient = async (ingredientId: number, newName: string) => {
-    const url = 'http://localhost:3001/ingredients'
-
-    return fetch(url, {
+    return fetch(`${baseUrl}ingredients`, {
         method: 'PATCH',
         headers: {
             Accept: 'application/json',
@@ -55,18 +58,20 @@ export const editIngredient = async (ingredientId: number, newName: string) => {
     })
         .then((response) => response.json())
         .catch(error => {
-            alert(error)
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.products'))
         })
 }
 
 export const addNewIngredient = async (ingredientName: string) => {
-    const url = `http://localhost:3001/ingredients?ingredientName=${ingredientName}`
-
-    return fetch(url, {
+    return fetch(`${baseUrl}ingredients?ingredientName=${ingredientName}`, {
         method: 'POST',
     })
         .then((response) => response.json())
         .catch(error => {
-            alert(`cant add ${ingredientName}` + error)
+            $('<div>')
+                .addClass('error-menu')
+                .text(error).appendTo($('.products'))
         })
 }

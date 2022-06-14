@@ -1,8 +1,8 @@
-import {renderProduct} from './products_utils'
-import {renderRecipesMenu, renderSaveRecipes} from './recipes_utils'
-import {renderMishMashChoice} from './mish_mash_utils'
-import {getAllIngredients} from './http-client/ingredients-database_utils'
-import {ingredientData} from './type/ingredient-data'
+import { renderProduct } from './products_utils'
+import { renderRecipesMenu, renderSaveRecipes } from './recipes_utils'
+import { renderMishMashChoice } from './mish_mash_utils'
+import { getAllIngredients } from './http-client/ingredients-database_utils'
+import { ingredientData } from './types'
 
 let activeButton = 'products'
 let products: Array<ingredientData> = []
@@ -10,17 +10,38 @@ let products: Array<ingredientData> = []
 export const renderMenu = async () => {
     const action = $('.action')
 
-    $('<div>').appendTo(action).addClass('title').text('Mishmash')
+    $('<div>')
+        .appendTo(action)
+        .addClass('title')
+        .text('Mishmash')
 
-    const buttonsBox = $('<div>').appendTo(action).addClass('navigation')
-    const productsBox = $('<div>').appendTo(action).addClass('products')
+    const buttonsBox = $('<div>')
+        .appendTo(action)
+        .addClass('navigation')
+    const productsBox = $('<div>')
+        .appendTo(action)
+        .addClass('products')
 
-    $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Składniki')
+    $('<button>')
+        .appendTo(buttonsBox)
+        .addClass('navigation__buttons')
+        .text('Składniki')
 
-    const secondButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Przepisy').attr('disabled', 'true')
-    const thirdButton = $('<button>').appendTo(buttonsBox).addClass('navigation__buttons').text('Mishmash').attr('disabled', 'true')
+    const secondButton = $('<button>')
+        .appendTo(buttonsBox)
+        .addClass('navigation__buttons')
+        .text('Przepisy')
+        .attr('disabled', 'true')
+    const thirdButton = $('<button>')
+        .appendTo(buttonsBox)
+        .addClass('navigation__buttons')
+        .text('Mishmash')
+        .attr('disabled', 'true')
 
-    $('<button>').appendTo(action).addClass('navigation__add').text('+')
+    $('<button>')
+        .appendTo(action)
+        .addClass('navigation__add')
+        .text('+')
 
     if (productsBox.has('selected-product')) {
         secondButton.removeAttr('disabled')

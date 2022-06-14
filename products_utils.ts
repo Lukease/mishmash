@@ -3,7 +3,7 @@ import {
     deleteIngredient,
     editIngredient,
 } from './http-client/ingredients-database_utils'
-import {ingredient} from './type/ingredients'
+import { ingredient } from './types'
 import {
     findOneRecipes,
 } from './http-client/recipesIngredients-database_utils'
@@ -25,7 +25,10 @@ const deleteProduct = async (event: JQuery.ClickEvent) => {
     const [recipeId] = recipe
 
     if (recipeId !== undefined) {
-        $('<div>').addClass('error-menu').appendTo('.products').text('First remove recipe ')
+        $('<div>')
+            .addClass('error-menu')
+            .appendTo('.products')
+            .text('First remove recipe ')
     }
 
     if (recipeId === undefined) {
@@ -49,7 +52,11 @@ const editProduct = async (event: JQuery.ClickEvent) => {
 
     product.css('display', 'none')
 
-    const newProduct = $('<input>').appendTo('.products').addClass('selected-product').css('background-color', 'white').css('text-align', 'center')
+    const newProduct = $('<input>')
+        .appendTo('.products')
+        .addClass('selected-product')
+        .css('background-color', 'white')
+        .css('text-align', 'center')
 
     newProduct.on('change', async () => {
         const newName: string = String(newProduct.val())
@@ -98,14 +105,27 @@ export const addProductText = async (event: JQuery.ChangeEvent) => {
 }
 
 export const renderProduct = (text: string, id: string) => {
-    const productBox = $('<div>').appendTo($(`.products`)).addClass('selected-product').attr('ingredientsId:', id)
-    const textInput = $('<input>').appendTo(productBox).addClass('selected-product__text').attr('placeholder', 'wpisz nazwe produktu').val(text)
-    const trashInput = $('<button>').appendTo(productBox).addClass('selected-product__icon-trash')
-    const editInput = $('<button>').appendTo(productBox).addClass('selected-product__icon-edit')
+    const productBox = $('<div>')
+        .appendTo($(`.products`))
+        .addClass('selected-product')
+        .attr('ingredientsId:', id)
+    const textInput = $('<input>')
+        .appendTo(productBox)
+        .addClass('selected-product__text')
+        .attr('placeholder', 'wpisz nazwe produktu')
+        .val(text)
+    const trashInput = $('<button>')
+        .appendTo(productBox)
+        .addClass('selected-product__icon-trash')
+    const editInput = $('<button>')
+        .appendTo(productBox)
+        .addClass('selected-product__icon-edit')
 
     textInput.on('change', async event => {
         await addProductText(event)
-        $('.selected-product__text').attr('readOnly', 'true').css('text-align', 'center')
+        $('.selected-product__text')
+            .attr('readOnly', 'true')
+            .css('text-align', 'center')
     })
 
     trashInput.click(async event => {
